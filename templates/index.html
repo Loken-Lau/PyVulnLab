@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>漏洞 Web 靶场 (Vulnerable)</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #ffeaea; }
+        h1 { color: #d32f2f; }
+        li { margin-bottom: 8px; }
+        code { background: #eee; padding: 2px; }
+        .box { border: 1px solid #d32f2f; padding: 15px; background: white; }
+    </style>
+</head>
+<body>
+    <h1>☠️ 原始漏洞演示页面</h1>
+    <div class="box">
+        <p><strong>警告：</strong> 以下功能均存在高危漏洞。</p>
+        <ol>
+            <li>
+                <strong>SQL 注入:</strong> 
+                <a href="/sqli?id=1">正常访问</a> | 
+                <a href="/sqli?id=1' OR '1'='1">SQLi 攻击 (获取 Admin)</a>
+            </li>
+            <li>
+                <strong>反射型 XSS:</strong> 
+                <a href="/xss?name=<script>alert('Hacked')</script>">点击触发弹窗</a>
+            </li>
+            <li>
+                <strong>命令执行 (RCE):</strong> 
+                <a href="/ping?ip=127.0.0.1;whoami">Ping + Whoami</a>
+            </li>
+            <li>
+                <strong>文件包含 (LFI):</strong> 
+                <a href="/read?file=/etc/passwd">读取 /etc/passwd</a>
+            </li>
+            <li>
+                <strong>文件上传:</strong> <a href="/upload">上传页面 (无限制)</a>
+            </li>
+            <li>
+                <strong>XXE 漏洞:</strong> (需使用 Postman POST XML 到 <code>/xxe</code>)
+            </li>
+            <li>
+                <strong>反序列化:</strong> 
+                <a href="/unserialize?data=gASVHQAAAAAAAACMBXBvc2l4lIwGc3lzdGVtlJOUjAZ3aG9hbWmUhZRSlC4=">执行 Whoami (Base64 pickle)</a>
+            </li>
+            <li>
+                <strong>SSRF:</strong> 
+                <a href="/ssrf?url=http://www.baidu.com">请求百度</a>
+            </li>
+            <li>
+                <strong>目录遍历:</strong> 
+                <a href="/download?path=app.py">下载源码 (app.py)</a>
+            </li>
+            <li>
+                <strong>CSRF (修改密码):</strong>
+                <form action="/update_pass" method="POST" style="display:inline;">
+                    <input type="hidden" name="pass" value="hacked123">
+                    <button type="submit">点击即遭攻击 (无确认)</button>
+                </form>
+            </li>
+        </ol>
+    </div>
+    <br>
+    <a href="/repaired" style="font-size: 20px; font-weight: bold; color: green;">👉 点击前往【修复版】页面</a>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>安全修复版 (Repaired)</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #eaffea; }
+        h1 { color: #2e7d32; }
+        li { margin-bottom: 8px; }
+        .box { border: 1px solid #2e7d32; padding: 15px; background: white; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ 漏洞修复演示页面</h1>
+    <div class="box">
+        <p><strong>安全：</strong> 以下功能已通过代码审计进行修复。</p>
+        <ol>
+            <li>
+                <strong>SQL 注入修复:</strong> 
+                <a href="/repair/sqli?id=1">正常访问</a> | 
+                <a href="/repair/sqli?id=1' OR '1'='1">尝试注入 (失败/报错)</a>
+            </li>
+            <li>
+                <strong>XSS 修复:</strong> 
+                <a href="/repair/xss?name=<script>alert('Fail')</script>">尝试注入 (显示纯文本)</a>
+            </li>
+            <li>
+                <strong>RCE 修复:</strong> 
+                <a href="/repair/ping?ip=127.0.0.1;whoami">尝试命令注入 (拦截)</a>
+            </li>
+            <li>
+                <strong>LFI 修复:</strong> 
+                <a href="/repair/read?file=/etc/passwd">尝试读取密码文件 (拦截)</a>
+            </li>
+            <li>
+                <strong>上传修复:</strong> 
+                <form action="/repair/upload" method="POST" enctype="multipart/form-data" style="display:inline;">
+                    <input type="file" name="file">
+                    <input type="submit" value="上传 (仅限图片)">
+                </form>
+            </li>
+            <li>
+                <strong>XXE 修复:</strong> (Postman POST XML 到 <code>/repair/xxe</code> 将不解析实体)
+            </li>
+            <li>
+                <strong>反序列化修复:</strong> 
+                <a href="/repair/unserialize?data=eyJuYW1lIjogInRlc3QifQ==">加载 JSON 安全数据</a>
+            </li>
+            <li>
+                <strong>SSRF 修复:</strong> 
+                <a href="/repair/ssrf?url=http://www.google.com">请求 Google (被拦截，非白名单)</a>
+            </li>
+            <li>
+                <strong>目录遍历修复:</strong> 
+                <a href="/repair/download?path=../../etc/passwd">尝试遍历下载 (拦截)</a>
+            </li>
+            <li>
+                <strong>CSRF 修复:</strong>
+                <form action="/repair/update_pass" method="POST" style="display:inline;">
+                    <input type="hidden" name="pass" value="newpass">
+                    <button type="submit">尝试修改 (校验 Referer)</button>
+                </form>
+            </li>
+        </ol>
+    </div>
+    <br>
+    <a href="/" style="font-size: 20px; font-weight: bold; color: red;">👈 返回【漏洞版】页面</a>
+</body>
+</html>
